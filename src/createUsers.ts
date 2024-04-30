@@ -18,6 +18,8 @@ interface ClerkUser {
 }
 
 const transformUser = (user: OriginalUser): ClerkUser => {
+  console.log(user);
+  
   return {
     external_id: user.id,
     first_name: user.first_name,

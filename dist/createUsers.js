@@ -35,11 +35,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = require("axios");
+var axios_1 = __importDefault(require("axios"));
 var fs_1 = require("fs");
-var envValidator_1 = require("./envValidator"); // Adjust this import path as necessary
+var envValidator_1 = require("./envValidator"); // import env
 var transformUser = function (user) {
+    console.log(user);
     return {
         external_id: user.id,
         first_name: user.first_name,
@@ -49,9 +53,9 @@ var transformUser = function (user) {
 };
 var createUsers = function (users) { return __awaiter(void 0, void 0, void 0, function () {
     var axiosInstance, _i, users_1, user, transformedUser, error_1;
-    var _a, _b;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0:
                 axiosInstance = axios_1.default.create({
                     baseURL: envValidator_1.env.CLERK_BASE_URL,
@@ -61,35 +65,33 @@ var createUsers = function (users) { return __awaiter(void 0, void 0, void 0, fu
                     },
                 });
                 _i = 0, users_1 = users;
-                _c.label = 1;
+                _b.label = 1;
             case 1:
                 if (!(_i < users_1.length)) return [3 /*break*/, 7];
                 user = users_1[_i];
                 transformedUser = transformUser(user);
-                _c.label = 2;
+                _b.label = 2;
             case 2:
-                _c.trys.push([2, 5, , 6]);
+                _b.trys.push([2, 5, , 6]);
                 return [4 /*yield*/, axiosInstance.post("/v1/users", transformedUser)];
             case 3:
-                _c.sent();
+                _b.sent();
                 console.log("User created: ".concat(user.id));
                 return [4 /*yield*/, new Promise(function (resolve) {
                         return setTimeout(resolve, envValidator_1.env.RATE_LIMIT_PAUSE_MS / 20);
                     })];
             case 4:
-                _c.sent(); // Respect rate limit
+                _b.sent(); // Respect rate limit
                 return [3 /*break*/, 6];
             case 5:
-                error_1 = _c.sent();
+                error_1 = _b.sent();
                 if (error_1 instanceof Error) {
                     // This checks if it's a standard JavaScript Error object
                     console.error("Error creating user ".concat(user.id, ":"), error_1.message);
-                    console.log(JSON.stringify(error_1.message));
                 }
                 else if (axios_1.default.isAxiosError(error_1)) {
                     // This checks if it's an AxiosError, which has the 'response' property
                     console.error("Error creating user ".concat(user.id, ":"), ((_a = error_1.response) === null || _a === void 0 ? void 0 : _a.data) || "Axios error without response data");
-                    console.log(JSON.stringify((_b = error_1.response) === null || _b === void 0 ? void 0 : _b.data));
                 }
                 else {
                     // Fallback for any other types of errors
